@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,18 +11,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dao.KeepaccountDao;
+import dto.Keepaccount;
+import dto.ReturnI;
 
 /**
- * Servlet implementation class InsertShowKeepaccount
+ * Servlet implementation class Alllist
  */
-@WebServlet("/InsertShowKeepaccount")
-public class InsertShowKeepaccount extends HttpServlet {
+@WebServlet("/Alllist")
+public class Alllist extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public InsertShowKeepaccount() {
+    public Alllist() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,31 +34,31 @@ public class InsertShowKeepaccount extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		ArrayList<Keepaccount> keepaccount = KeepaccountDao.getAll();
+		int i = 0;
+		for(Keepaccount result : keepaccount){
 
+			String income = result.getIncome();
+			String spending = result.getSpending();
 
-		String key2 = request.getParameter("income");
-		String key3 = request.getParameter("spending");
-
-
-		if("".equals(key2)||"".equals(key3)){
-			String view = "/WEB-INF/view/ShowRegister2.jsp";
-			RequestDispatcher dispatcher = request.getRequestDispatcher(view);
-			dispatcher.forward(request, response);
-		}else{
-
-			KeepaccountDao.newDataDAO(key2,key3);
-			String view = "/WEB-INF/view/ShowRegister1.jsp";
-			RequestDispatcher dispatcher = request.getRequestDispatcher(view);
-			dispatcher.forward(request, response);
+			Keepaccount data = new Keepaccount(income,spending);
+			String rs = "rs" + i;
+			request.setAttribute(rs,data);
+			i++;
 		}
+		ReturnI ri = new ReturnI(i);
+		request.setAttribute("inum",ri);
+
+
+		request.setCharacterEncoding("UTF-8");
+		String view = "/WEB-INF/view/All.jsp";
+		RequestDispatcher dispatcher = request.getRequestDispatcher(view);
+		dispatcher.forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 	}
-
-}
+	}

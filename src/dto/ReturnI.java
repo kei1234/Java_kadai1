@@ -1,8 +1,10 @@
 package dto;
 
 public class ReturnI {
-
 	private int i;
+	public ReturnI(){
+
+	}
 	public ReturnI(int i) {
 		super();
 		this.i = i;
@@ -13,4 +15,6 @@ public class ReturnI {
 	public void setI(int i) {
 		this.i = i;
 	}
+
+
 }
